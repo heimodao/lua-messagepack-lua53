@@ -32,8 +32,6 @@ my @files = qw{MANIFEST}; \
 while (<>) { \
     chomp; \
     next if m{^\.}; \
-    next if m{^doc/\.}; \
-    next if m{^doc/google}; \
     next if m{^rockspec/}; \
     push @files, $$_; \
 } \
@@ -66,10 +64,7 @@ CHANGES:
 tag:
 	git tag -a -m 'tag release $(VERSION)' $(VERSION)
 
-doc:
-	git read-tree --prefix=doc/ -u remotes/origin/gh-pages
-
-MANIFEST: doc
+MANIFEST:
 	git ls-files | perl -e '$(manifest_pl)' > MANIFEST
 
 $(TARBALL): MANIFEST
@@ -77,8 +72,6 @@ $(TARBALL): MANIFEST
 	perl -ne 'print qq{lua-MessagePack-$(VERSION)/$$_};' MANIFEST | \
 	    tar -zc -T - -f $(TARBALL)
 	rm lua-MessagePack-$(VERSION)
-	rm -rf doc
-	git rm doc/*
 
 dist: $(TARBALL)
 
@@ -96,7 +89,7 @@ test:
 	cd $(SRC) && prove --exec=$(LUA) ../test/*.t
 
 luacheck:
-	luacheck --std=max --codes src --ignore 211/_ENV 212 213 311/j
+	luacheck --std=max --codes src --ignore 211/_ENV 212 213 311/j 631
 	luacheck --std=max --codes src5.3 --ignore 211/_ENV 212 213 311/j
 	luacheck --std=max --config .test.luacheckrc test/*.t
 
@@ -113,8 +106,10 @@ coveralls:
 README.html: README.md
 	Markdown.pl README.md > README.html
 
+gh-pages:
+	mkdocs gh-deploy --clean
+
 clean:
-	rm -rf doc
 	rm -f MANIFEST *.bak src/luacov.*.out README.html
 
 realclean: clean

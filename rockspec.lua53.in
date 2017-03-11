@@ -1,7 +1,7 @@
 package = 'lua-MessagePack-lua53'
 version = '@version@-@rev@'
 source = {
-    url = 'http://sites.google.com/site/fperrad/lua-messagepack-@version@.tar.gz',
+    url = 'http://github.com/fperrad/lua-MessagePack/raw/releases/lua-messagepack-@version@.tar.gz',
     md5 = '@md5@',
     dir = 'lua-MessagePack-@version@',
 }
@@ -24,5 +24,5 @@ build = {
     modules = {
         ['MessagePack']     = 'src5.3/MessagePack.lua',
     },
-    copy_directories = { 'doc', 'test' },
+    copy_directories = { 'docs', 'test' },
 }
